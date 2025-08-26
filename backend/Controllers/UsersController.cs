@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BCrypt.Net;
 
 namespace backend.Controllers
 {
@@ -28,6 +29,7 @@ namespace backend.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(User user)
         {
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -37,9 +39,9 @@ namespace backend.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] Login login)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == login.Username && u.Password == login.Password);
+            var user = _context.Users.FirstOrDefault(u => u.Username == login.Username);
 
-            if (user == null)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
                 return Unauthorized();
             }

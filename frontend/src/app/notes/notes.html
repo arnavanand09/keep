@@ -1,0 +1,26 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Take a note
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <div *ngIf="errMessage" style="color: red;">{{ errMessage }}</div>
+
+  <mat-form-field>
+    <input matInput name="title" [(ngModel)]="note.title" placeholder="Title">
+  </mat-form-field>
+
+  <mat-form-field>
+    <textarea matInput name="text" [(ngModel)]="note.text" placeholder="Text"></textarea>
+  </mat-form-field>
+
+  <button mat-button (click)="addNote()">Done</button>
+</mat-expansion-panel>
+
+<div class="notes-container">
+  <mat-card *ngFor="let note of notes">
+    <mat-card-title>{{ note.title }}</mat-card-title>
+    <mat-card-content>{{ note.text }}</mat-card-content>
+  </mat-card>
+</div>
